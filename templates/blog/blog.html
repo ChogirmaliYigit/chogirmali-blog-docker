@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load custom_filters %}
+{% load static %}
+
+{% block title %}  Cho'girmali Blog {% endblock title %}
+
+{% block extra_styles %}
+<style>
+    .container .row img.post-img {
+        width: auto;
+        height: 50%;
+    }
+
+    .container .row div {
+        max-height: 300px;
+    }
+
+    @media (max-width: 1279px) {
+        .container .row img.post-img {
+            width: 50%;
+            height: auto;
+        }
+
+        .container .row div {
+            max-height: 500px;
+        }
+    }
+</style>
+{% endblock extra_styles %}
+
+{% block content %}
+<main id="main">
+    <section style="overflow: scroll;">
+        <div class="container">
+            <div class="row">
+                {% for post in posts %}
+                <div class="col-md-6 mx-auto mb-3" data-aos="fade-up">
+                    <div class="mb-3">
+                        <div class="card-body">
+                            <div class="post-meta">
+                                <span class="date">{{ post.updated_at|date }}</span>
+                            </div>
+                            <p class="card-text">
+                                {{ post.content|markdown|truncatechars:100 }}
+                            </p>
+                            <a href="{% url 'post-detail' post.pk %}"
+                                class="btn btn-outline-primary d-block mt-auto">{% trans "read more" %}</a>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                    {% include 'includes/no-content.html' %}
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+</main>
+{% endblock content %}

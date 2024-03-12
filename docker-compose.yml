@@ -1,0 +1,32 @@
+version: '3.9'
+
+volumes:
+  dev_postgres_data: {}
+
+services:
+  db:
+    container_name: db
+    image: postgres
+    volumes:
+      - dev_postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=chogirmali_blog
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+    ports:
+      - '5434:5432'
+
+  backend:
+    container_name: backend
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    env_file:
+      - ./.env
+    command: /code/start.sh
+    volumes:
+      - .:/code
+    ports:
+      - '8000:8000'
+    depends_on:
+      - db
